@@ -65,10 +65,19 @@ jobs:
           key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
           paths:
             - vendor/bundle
+
       - run:
-          name: Build Android APK
+          name: fastlane tests
           command: |
-            ./gradlew assembleDebug
+            mkdir -p test-results/fastlane
+            bundle exec fastlane beta
+            mv fastlane/report.xml test-results/fastlane
+
+      - store_test_results:
+          path: test-results
+
+      - store_artifacts:
+          path: test-results
 
 workflows:
   version: 2
