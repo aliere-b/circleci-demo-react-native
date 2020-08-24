@@ -44,7 +44,7 @@ jobs:
 
       - store_artifacts:
           path: test-results
-
+  
   bundle-debug:
     working_directory: ~/demo-react-native
     docker:
@@ -68,5 +68,5 @@ workflows:
     jobs:
       - node
       - bundle-debug:
-          require:
+          requires:
             - node
