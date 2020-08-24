@@ -45,10 +45,10 @@ jobs:
       - store_artifacts:
           path: test-results
   
-  android:
-    working_directory: ~/demo-react-native/android
+  bundle-android:
+    working_directory: ~/demo-react-native
     docker:
-      - image: circleci/android:api-29-node
+      - image: circleci/node:8
     steps:
       - checkout:
           path: ~/demo-react-native
@@ -59,31 +59,15 @@ jobs:
       - restore_cache:
           key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
 
-      - run: bundle install
+      - run: npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
 
-      - save_cache:
-          key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
-          paths:
-            - vendor/bundle
-
-      - run:
-          name: fastlane tests
-          command: |
-            mkdir -p test-results/fastlane
-            bundle exec fastlane test
-            mv fastlane/report.xml test-results/fastlane
-
-      - store_test_results:
-          path: test-results
-
-      - store_artifacts:
-          path: test-results
+ 
 
 workflows:
   version: 2
   node-android:
     jobs:
       - node
-      - android:
+      - bundle-android:
           requires:
             - node
