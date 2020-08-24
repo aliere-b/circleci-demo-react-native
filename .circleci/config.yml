@@ -45,7 +45,7 @@ jobs:
       - store_artifacts:
           path: test-results
 
-  bundle-android:
+  bundle-debug:
     working_directory: ~/demo-react-native
     docker:
       - image: circleci/node:8
@@ -67,6 +67,6 @@ workflows:
   node-android:
     jobs:
       - node
-      - bundle-android:
+      - bundle-debug:
           require:
             - node
